@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\AskQuestionRequest;
 use App\Question;
 use Illuminate\Http\Request;
 
@@ -22,8 +23,8 @@ class QuestionsController extends Controller
          view('questions.index',compact('questions'))->render();// this is for query log
         dd(\DB::getQueryLog()); // this helps to display query log */
 
-        $questions=Question::with('user')->latest()->paginate(5); // egger oading
-        return view('questions.index',compact('questions'));
+        $questions = Question::with('user')->latest()->paginate(5); // egger oading
+        return view('questions.index', compact('questions'));
     }
 
     /**
@@ -34,25 +35,29 @@ class QuestionsController extends Controller
     public function create()
     {
         //
-        $question= new question();
-        return view('questions.create',compact('question'));
+        $question = new question();
+        return view('questions.create', compact('question'));
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(AskQuestionRequest $request)
     {
         //
+
+       $request->user()->questions()->create($request->only('title','body'));
+       return redirect()->route('questions.index')->with('success','your question has been submitted');
+
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Questions  $questions
+     * @param \App\Questions $questions
      * @return \Illuminate\Http\Response
      */
     public function show(Questions $questions)
@@ -63,7 +68,7 @@ class QuestionsController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Questions  $questions
+     * @param \App\Questions $questions
      * @return \Illuminate\Http\Response
      */
     public function edit(Questions $questions)
@@ -74,8 +79,8 @@ class QuestionsController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Questions  $questions
+     * @param \Illuminate\Http\Request $request
+     * @param \App\Questions $questions
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, Questions $questions)
@@ -86,7 +91,7 @@ class QuestionsController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Questions  $questions
+     * @param \App\Questions $questions
      * @return \Illuminate\Http\Response
      */
     public function destroy(Questions $questions)

@@ -9,13 +9,15 @@
                         <div class="d-flex align-items-center">
                             <h2>All Questions</h2>
                             <div class="ml-auto">
-                                <a href="{{route('questions.create')}}" class="btn btn-sm btn-outline-secondary"><i class="fa fa-plus-sm"></i>Ask Questions</a>
+                                <a href="{{route('questions.create')}}" class="btn btn-sm btn-outline-secondary"><i
+                                        class="fa fa-plus-sm"></i>Ask Questions</a>
                             </div>
                         </div>
 
                     </div>
 
                     <div class="card-body">
+                        @include('layouts._messages')
                         @forelse($questions as $question)
                             <div class="media">
                                 <div class="d-flex flex-column counters">
@@ -31,8 +33,9 @@
                                 </div>
                                 <div class="media-body">
                                     <h3 class="mt-0"><a href="{{$question->url}}"> {{$question->title}}</a></h3>
-                                    <p class="lead">Asked by <a href="{{$question->user->url}}" >{{$question->user->name}}</a>
-                                    <small class="text-muted">{{$question->created_date}}</small>
+                                    <p class="lead">Asked by <a
+                                            href="{{$question->user->url}}">{{$question->user->name}}</a>
+                                        <small class="text-muted">{{$question->created_date}}</small>
                                     </p>
                                     {{\Illuminate\Support\Str::limit($question->body,250)}}
                                 </div>
