@@ -5,7 +5,15 @@
         <div class="row justify-content-center">
             <div class="col-md-12">
                 <div class="card">
-                    <div class="card-header">Questions</div>
+                    <div class="card-header">
+                        <div class="d-flex align-items-center">
+                            <h2>All Questions</h2>
+                            <div class="ml-auto">
+                                <a href="{{route('questions.create')}}" class="btn btn-sm btn-outline-secondary"><i class="fa fa-plus-sm"></i>Ask Questions</a>
+                            </div>
+                        </div>
+
+                    </div>
 
                     <div class="card-body">
                         @forelse($questions as $question)
