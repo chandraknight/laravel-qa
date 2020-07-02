@@ -57,18 +57,20 @@ class QuestionsController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param \App\Questions $questions
+     * @param \App\Question $question
      * @return \Illuminate\Http\Response
      */
-    public function show(Questions $questions)
+    public function show(Question $question)
     {
         //
+        $question->increment('view');
+        return view('questions.show',compact('question'));
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param \App\Questions $questions
+     * @param \App\Question $question
      * @return \Illuminate\Http\Response
      */
     public function edit(Question $question)
