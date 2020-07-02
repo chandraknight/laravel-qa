@@ -97,8 +97,9 @@ class QuestionsController extends Controller
      * @param \App\Questions $questions
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Questions $questions)
+    public function destroy(Question $question)
     {
-        //
+        $question->delete();
+        return redirect('/questions')->with('success',"Your question hasbeen deleted");
     }
 }
