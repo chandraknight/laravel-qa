@@ -4,7 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\AskQuestionRequest;
 use App\Question;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
+
 
 class QuestionsController extends Controller
 {
@@ -49,8 +50,8 @@ class QuestionsController extends Controller
     {
         //
 
-       $request->user()->questions()->create($request->only('title','body'));
-       return redirect()->route('questions.index')->with('success','your question has been submitted');
+        $request->user()->questions()->create($request->only('title', 'body'));
+        return redirect()->route('questions.index')->with('success', 'your question has been submitted');
 
     }
 
@@ -64,7 +65,7 @@ class QuestionsController extends Controller
     {
         //
         $question->increment('view');
-        return view('questions.show',compact('question'));
+        return view('questions.show', compact('question'));
     }
 
     /**
@@ -75,8 +76,12 @@ class QuestionsController extends Controller
      */
     public function edit(Question $question)
     {
-        //
-        return view('questions.edit',compact('question'));
+        if (Gate::denies('update-question', $question)) {
+            abort(403, "Access Denied");
+        }
+        return view('questions.edit', compact('question'));
+
+
     }
 
     /**
@@ -88,9 +93,11 @@ class QuestionsController extends Controller
      */
     public function update(AskQuestionRequest $request, Question $question)
     {
-        //
-        $question->update($request->only('title','body'));
-        return redirect('/questions')->with('success',"Your question hasbeen updated");
+        if (Gate::denies('update-question', $question)) {
+            abort(403, "Access Denied");
+        }
+        $question->update($request->only('title', 'body'));
+        return redirect('/questions')->with('success', "Your question hasbeen updated");
     }
 
     /**
@@ -101,7 +108,10 @@ class QuestionsController extends Controller
      */
     public function destroy(Question $question)
     {
+        if (Gate::denies('delete-question', $question)) {
+            abort(403, "Access Denied");
+        }
         $question->delete();
-        return redirect('/questions')->with('success',"Your question hasbeen deleted");
+        return redirect('/questions')->with('success', "Your question hasbeen deleted");
     }
 }
