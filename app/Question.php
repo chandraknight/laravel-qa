@@ -9,21 +9,19 @@ class Question extends Model
 {
     protected $fillable = ['title', 'body'];
 
-    //
-    public function user()
-    {
+    public function user() {
         return $this->belongsTo(User::class);
     }
 
     public function setTitleAttribute($value)
     {
         $this->attributes['title'] = $value;
-        $this->attributes['slug'] = Str::slug($value, '-');
+        $this->attributes['slug'] = str_slug($value);
     }
 
     public function getUrlAttribute()
     {
-        return route('questions.show', $this->slug);
+        return route("questions.show", $this->slug);
     }
 
     public function getCreatedDateAttribute()
@@ -34,12 +32,12 @@ class Question extends Model
     public function getStatusAttribute()
     {
         if ($this->answers_count > 0) {
-            if ($this->best_answere_id) {
-                return 'answered-accepted';
+            if ($this->best_answer_id) {
+                return "answered-accepted";
             }
-            return 'answered';
+            return "answered";
         }
-        return 'unanswered';
+        return "unanswered";
     }
 
     public function getBodyHtmlAttribute()
@@ -54,4 +52,29 @@ class Question extends Model
         // foreach ($question->answers as $answer)
     }
 
+    public function acceptBestAnswer(Answer $answer)
+    {
+        $this->best_answer_id = $answer->id;
+        $this->save();
+    }
+
+    public function favorites()
+    {
+        return $this->belongsToMany(User::class, 'favorites')->withTimestamps(); //, 'question_id', 'user_id');
+    }
+
+    public function isFavorited()
+    {
+        return $this->favorites()->where('user_id', auth()->id())->count() > 0;
+    }
+
+    public function getIsFavoritedAttribute()
+    {
+        return $this->isFavorited();
+    }
+
+    public function getFavoritesCountAttribute()
+    {
+        return $this->favorites->count();
+    }
 }
