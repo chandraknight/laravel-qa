@@ -4,13 +4,16 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
+use Mews\Purifier\Purifier;
 
 class Question extends Model
 {
     use VotableTrait;
+
     protected $fillable = ['title', 'body'];
 
-    public function user() {
+    public function user()
+    {
         return $this->belongsTo(User::class);
     }
 
@@ -43,9 +46,11 @@ class Question extends Model
 
     public function getBodyHtmlAttribute()
     {
-        return \Parsedown::instance()->text($this->body);
+        return clean($this->bodyHtml());
     }
-
+//public function setBodyAttribute($value){
+//        $this->attributes['body']=clean($value);
+//}
     public function answers()
     {
         return $this->hasMany(Answer::class);
@@ -77,6 +82,22 @@ class Question extends Model
     public function getFavoritesCountAttribute()
     {
         return $this->favorites->count();
+    }
+
+    public function getExcerptAttribute()
+    {
+        return $this->excerpt(250);
+
+    }
+
+    public function excerpt($length)
+    {
+        return Str::limit(strip_tags($this->bodyHtml()), $length);
+    }
+
+    protected function bodyHtml()
+    {
+        return \Parsedown::instance()->text($this->body);
     }
 
 }
