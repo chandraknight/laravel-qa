@@ -14,7 +14,7 @@ class VoteAnswerController extends Controller
 
     public function __invoke(Answer $answer)
     {
-        dd('yoie are here');
+
         $vote = (int) request()->vote;
 
         auth()->user()->voteAnswer($answer, $vote);

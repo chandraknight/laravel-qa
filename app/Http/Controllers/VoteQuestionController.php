@@ -14,7 +14,6 @@ class VoteQuestionController extends Controller
 
     public function __invoke(Question $question)
     {
-
         $vote = (int) request()->vote;
 
         auth()->user()->voteQuestion($question, $vote);
