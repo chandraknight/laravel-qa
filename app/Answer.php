@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Answer extends Model
 {
+    use VotableTrait;
     protected $fillable = ['body', 'user_id'];
 
     public function question()
@@ -51,5 +52,6 @@ class Answer extends Model
     public function isBest(){
         return $this->id === $this->question->best_answer_id ;
     }
+
 
 }

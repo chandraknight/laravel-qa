@@ -7,6 +7,7 @@ use Illuminate\Support\Str;
 
 class Question extends Model
 {
+    use VotableTrait;
     protected $fillable = ['title', 'body'];
 
     public function user() {
@@ -16,7 +17,7 @@ class Question extends Model
     public function setTitleAttribute($value)
     {
         $this->attributes['title'] = $value;
-        $this->attributes['slug'] = str_slug($value);
+        $this->attributes['slug'] = Str::slug($value);
     }
 
     public function getUrlAttribute()
@@ -77,4 +78,5 @@ class Question extends Model
     {
         return $this->favorites->count();
     }
+
 }
