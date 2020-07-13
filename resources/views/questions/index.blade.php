@@ -64,7 +64,10 @@
                         @empty
                             <div class="media">
                                 <div class="media-body">
+                                   <div class="alert alert-warning">
+
                                     <h3 class="mt-0">Sorry no record is available !</h3>
+                                   </div>
                                 </div>
                             </div>
                         @endforelse
