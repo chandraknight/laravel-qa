@@ -7,7 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 class Answer extends Model
 {
     use VotableTrait;
+
     protected $fillable = ['body', 'user_id'];
+    protected $appends = ['created_date'];
 
     public function question()
     {
@@ -33,7 +35,7 @@ class Answer extends Model
         });
 
         static::deleted(function ($answer) {
-           $answer->question->decrement('answers_count');
+            $answer->question->decrement('answers_count');
         });
     }
 
@@ -44,13 +46,17 @@ class Answer extends Model
 
     public function getStatusAttribute()
     {
-        return $this->isBest()?'vote-accepted':'';
+        return $this->isBest() ? 'vote-accepted' : '';
     }
-    public function getIsBestAttribute(){
+
+    public function getIsBestAttribute()
+    {
         return $this->isBest();
     }
-    public function isBest(){
-        return $this->id === $this->question->best_answer_id ;
+
+    public function isBest()
+    {
+        return $this->id === $this->question->best_answer_id;
     }
 
 
