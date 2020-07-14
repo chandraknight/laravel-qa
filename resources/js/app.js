@@ -13,7 +13,10 @@ import VueIziToast from 'vue-izitoast';
 
 import 'izitoast/dist/css/iziToast.min.css';
 
+import authorize from "./authorization/authorize";
+
 Vue.use(VueIziToast);
+Vue.use(authorize);
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue

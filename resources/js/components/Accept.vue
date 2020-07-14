@@ -44,7 +44,7 @@
         },
         computed: {
             canAccept() {
-                return true;
+                return this.authorized('accept',this.answer);
             },
             accepted() {
                 return !this.canAccept && this.isBest;
