@@ -1,9 +1,8 @@
 <template>
     <div>
-
         <a v-if="canAccept" title="Mark this answer as best answer"
            :class="classes"
-           v-on:click.prevent="create"
+           @click.prevent="create"
         >
             <i class="fas fa-check fa-2x"></i>
         </a>
@@ -13,43 +12,46 @@
         >
             <i class="fas fa-check fa-2x"></i>
         </a>
-
-
     </div>
 </template>
 
 <script>
+    import eventBus from '../event-bus';
     export default {
         name: "Accept",
         props: ['answer'],
-        data() {
+        data () {
             return {
                 isBest: this.answer.is_best,
                 id: this.answer.id
             }
         },
-        methods:{
-          create(){
-              axios.post(`/answers/${this.id}/accept`).then(res=>{
-                  this.$toast.success(res.data.message,'Success',{
-                      timeout:3000,
-                      position:bottomLeft
-                  })
-                  this.isBest=true;
-              }).catch(err=>{
-
-              })
-
-          }
+        created() {
+            eventBus.$on('accepted',id=>{
+                this.isBest=(id===this.id);
+            })
+        },
+        methods: {
+            create () {
+                axios.post(`/answers/${this.id}/accept`)
+                    .then(res => {
+                        this.$toast.success(res.data.message, "Success", {
+                            timeout: 3000,
+                            position: 'bottomLeft'
+                        });
+                        this.isBest = true;
+                        eventBus.$emit('accepted',this.id);
+                    })
+            }
         },
         computed: {
-            canAccept() {
-                return this.authorized('accept',this.answer);
+            canAccept () {
+                return this.authorize('accept', this.answer);
             },
-            accepted() {
+            accepted () {
                 return !this.canAccept && this.isBest;
             },
-            classes() {
+            classes () {
                 return [
                     'mt-2',
                     this.isBest ? 'vote-accepted' : ''

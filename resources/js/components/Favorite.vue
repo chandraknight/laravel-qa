@@ -1,8 +1,6 @@
 <template>
     <a title="Click to mark as favorite question (Click again to undo)"
        :class="classes" @click.prevent="toggle">
-        <!--       onclick="event.preventDefault(); document.getElementById('favorite-question-{{ $model->id }}').submit();"-->
-
         <i class="fas fa-star fa-2x"></i>
         <span class="favorites-count">{{ count }}</span>
     </a>
@@ -14,52 +12,45 @@
         props: ['question'],
         data() {
             return {
-                isFavorite: this.question.is_favorited,
+                isFavorited: this.question.is_favorited,
                 count: this.question.favorites_count,
-                id: this.question.id,
+                id: this.question.id
             }
         },
         computed: {
             classes() {
                 return [
                     'favorite', 'mt-2',
-                    !this.signedIn ? 'off' : (this.isFavorite ? 'favorited' : '')
+                    !this.signedIn ? 'off' : (this.isFavorited ? 'favorited' : '')
                 ];
             },
             endpoint() {
                 return `/questions/${this.id}/favorites`;
-            },
-
+            }
         },
         methods: {
             toggle() {
-                if (! this.signedIn) {
-                    this.$toast.warning('Please login to favorite question', 'Warning', {
-                        timeout:3000,
-                        position:'bottomLeft'
+                if (!this.signedIn) {
+                    this.$toast.warning("Please login to favorite this question", "Warning", {
+                        timeout: 3000,
+                        position: 'bottomLeft'
                     });
                     return;
                 }
-                this.isFavorite ? this.destory() : this.create();
+                this.isFavorited ? this.destroy() : this.create();
             },
-            destory() {
+            destroy() {
                 axios.delete(this.endpoint)
                     .then(res => {
                         this.count--;
-                        this.isFavorite = false;
-                    })
-                    .catch(err => {
-
+                        this.isFavorited = false;
                     });
             },
             create() {
                 axios.post(this.endpoint)
                     .then(res => {
                         this.count++;
-                        this.isFavorite = true;
-                    })
-                    .catch(err => {
-
+                        this.isFavorited = true;
                     });
             }
         }

@@ -9,6 +9,15 @@ use Illuminate\Http\Request;
 
 class AnswersController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth')->except('index');
+    }
+
+    public function index(Question $question)
+    {
+        return $question->answers()->with('user')->simplePaginate(3);
+    }
     /**
      * Store a newly created resource in storage.
      *
@@ -34,7 +43,7 @@ class AnswersController extends Controller
     {
         $this->authorize('update', $answer);
 
-        return view('answers.edit', compact('question', 'answer'));
+        return view('answers . edit', compact('question', 'answer'));
     }
 
     /**
@@ -58,7 +67,7 @@ class AnswersController extends Controller
             ]);
         }
 
-        return redirect()->route('questions.show', $question->slug)->with('success', 'Your answer has been updated');
+        return redirect()->route('questions . show', $question->slug)->with('success', 'Your answer has been updated');
     }
 
     /**

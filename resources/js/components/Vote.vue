@@ -13,25 +13,33 @@
         </a>
 
         <favorite v-if="name === 'question'" :question="model"></favorite>
-        <accept-vote v-else :answer="model"></accept-vote>
+        <accept v-else :answer="model"></accept>
     </div>
 </template>
 
-
 <script>
-    import Favorite from './Favorite.vue';
-    import Accept from './Accept.vue';
+    import Favorite from './Favorite';
+    import Accept from './Accept';
+
     export default {
         name: "Vote",
         props: ['name', 'model'],
-        comments: {
+        computed: {
+            classes() {
+                return this.signedIn ? '' : 'off';
+            },
+            endpoint() {
+                return `/${this.name}s/${this.id}/vote`;
+            }
+        },
+        components: {
             Favorite,
-            Accept,
+            Accept
         },
         data() {
             return {
                 count: this.model.votes_count,
-                id: this.model.id,
+                id: this.model.id
             }
         },
         methods: {
@@ -64,14 +72,6 @@
                         });
                         this.count = res.data.votesCount;
                     })
-            }
-        },
-        computed: {
-            classes() {
-                return this.signedIn ? '' : 'off';
-            },
-            endpoint() {
-                return `/${this.name}s/${this.id}/vote`
             }
         }
     }

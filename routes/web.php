@@ -23,7 +23,7 @@ Route::get('questions/{slug}','QuestionsController@show')->name('questions.show'
 /*Both are same*/
 //Route::post('/questions/{question}/answers','AnswersController@store')->name('answers.store');
 //Route::resource('questions.answers','AnswersController')->only(['store','edit','update','destory']);
-Route::resource('questions.answers', 'AnswersController')->except(['index', 'create', 'show']);
+Route::resource('questions.answers', 'AnswersController')->except(['create', 'show']);
 /*******/
 Route::post('answers/{answer}/accept','AcceptAnswerController')->name('answers.accept');
 
